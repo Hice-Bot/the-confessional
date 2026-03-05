@@ -35,3 +35,32 @@ Feature #3: Data persists across server restart
 
 === Current Status ===
 3/108 features passing (all 3 assigned to this agent completed)
+
+== Session 2 - 2026-03-05 ==
+Agent: Coding Agent (Features #4, #5)
+Status: All 2 assigned features PASSING
+
+=== Features Completed ===
+
+Feature #4: No mock data patterns in codebase
+- Searched all src/ .js files for mock/fake/dummy/hardcode/sample patterns - none found
+- Searched for in-memory array patterns (const confessions = [) - none found
+- Searched for push({ patterns suggesting in-memory storage - none found
+- Verified database.js imports and uses better-sqlite3
+- Verified all route files (admin.js, agent-feed.js, confessional.js, sessions.js, submit.js) import getDb and use db.prepare() for SQL queries
+- Searched for globalThis/devStore/STUB/MOCK/isDev patterns - none found in src/
+- Codebase is clean - all data operations go through real SQLite database
+
+Feature #5: Backend API queries real database
+- Verified all route handlers import getDb from database module
+- Created session via admin API, submitted confession via agent API
+- Queried SQLite database file directly - confirmed confession row exists with matching text
+- Verified GET /confessional/feed returns same text as database
+- Verified GET /confessional/count reflects real database count (1 after insert)
+- Verified POST /confessional/admin/flag updates database (count dropped to 0)
+- Verified POST /confessional/admin/unflag updates database (count returned to 1)
+- Verified DELETE /confessional/admin/confessions/:id removes from database (count 0, direct query empty)
+- Test data cleaned up after verification
+
+=== Current Status ===
+5/108 features passing (all 5 assigned across 2 sessions completed)
