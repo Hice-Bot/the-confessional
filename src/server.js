@@ -35,6 +35,11 @@ app.get('/api/health', (req, res) => {
   }
 });
 
+// Root path redirects to the confessional
+app.get('/', (req, res) => {
+  res.redirect(302, '/confessional');
+});
+
 // Route mounting
 const confessionalRoutes = require('./routes/confessional');
 const submitRoutes = require('./routes/submit');
