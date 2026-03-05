@@ -1,3 +1,27 @@
+== Session 28 - 2026-03-05 ==
+Agent: Coding Agent (Feature #61)
+Status: Feature #61 PASSING
+
+=== Features Completed ===
+
+Feature #61: Empty submit still blocks second attempt
+- Created session via admin API
+- POST /confessional/submit with empty text "" → 200 {"received":true}
+- POST /confessional/submit with actual text on same session → 409 "Already submitted for this session"
+- Verified NO confession stored in DB (empty was skipped)
+- Verified session_attempt WAS recorded (blocking the second attempt)
+- No mock data patterns in src/ (grep verified)
+- All 4 steps verified
+
+=== Observations ===
+- No code changes needed - implementation was already correct
+- Empty submissions correctly record session_attempt but skip confession storage
+- Second attempt correctly blocked by session_attempt check
+- Test data cleaned up after verification
+
+=== Current Status ===
+73/108 features passing (67.6%)
+
 == Session 26 - 2026-03-05 ==
 Agent: Coding Agent (Features #56, #57, #58)
 Status: All 3 assigned features PASSING
