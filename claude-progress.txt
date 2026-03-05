@@ -1,3 +1,31 @@
+== Session 29 - 2026-03-05 ==
+Agent: Coding Agent (Feature #68)
+Status: Feature #68 PASSING
+
+=== Features Completed ===
+
+Feature #68: Hard delete audit log has null confession_id
+- Created session via admin API, submitted confession with unique text
+- Found confession ID from database (agent feed doesn't expose IDs by design)
+- DELETE /confessional/admin/confessions/:id with adm_ auth → 200
+- Queried admin_actions table directly
+- Verified: confession_id is null (correct - confession was deleted)
+- Verified: action field is 'delete'
+- Verified: admin_key_prefix is 'adm_test' (populated)
+- Verified: created_at and id fields are populated
+- Confirmed confession was actually removed from database
+- All 6 steps verified
+
+=== Observations ===
+- No code changes needed - implementation was already correct
+- admin.js line 84 explicitly sets confession_id to null for delete actions
+- No mock data patterns found in src/ (grep verified)
+- Server running on port 3003
+- All test data cleaned up after verification
+
+=== Current Status ===
+74/108 features passing (68.5%)
+
 == Session 28 - 2026-03-05 ==
 Agent: Coding Agent (Feature #61)
 Status: Feature #61 PASSING
