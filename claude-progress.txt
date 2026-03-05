@@ -1,3 +1,31 @@
+== Session 22 - 2026-03-05 ==
+Agent: Coding Agent (Features #42, #43)
+Status: Both assigned features PASSING
+
+=== Features Completed ===
+
+Feature #42: Duplicate session submission returns 409
+- Created session, submitted confession → 200 {"received":true}
+- Second submission with same session → 409 {"error":"Already submitted for this session"}
+- Error message clearly mentions "already submitted"
+- All 4 steps verified
+
+Feature #43: Text exceeding 2000 chars returns 400
+- Created two sessions (one per test case)
+- POST with 2001 characters → 400 {"error":"Text must be a string of 2000 characters or fewer"}
+- Error message mentions length limit
+- POST with exactly 2000 characters → 200 {"received":true} (boundary case accepted)
+- All 5 steps verified
+
+=== Observations ===
+- No code changes needed - all implementation was already correct
+- No mock data patterns found in src/ (grep verified)
+- Server running on port 3003
+- All test data cleaned up after verification
+
+=== Current Status ===
+61/108 features passing (56.5%)
+
 == Session 20 - 2026-03-05 ==
 Agent: Coding Agent (Features #35, #36)
 Status: Both assigned features PASSING
