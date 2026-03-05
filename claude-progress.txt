@@ -1,3 +1,38 @@
+== Session 43 - 2026-03-05 ==
+Agent: Coding Agent (Features #101, #102)
+Status: Both assigned features PASSING
+
+=== Features Completed ===
+
+Feature #101: Concurrent submissions to different sessions succeed
+- Created 5 separate sessions via admin API
+- Submitted confessions to all 5 sessions simultaneously using Promise.all()
+- All 5 returned HTTP 200 with {received: true}
+- All 5 confessions appeared in GET /confessional/feed (verified with unique alphanumeric markers)
+- No duplicates, no missing entries, exactly 5 entries with marker text
+- Agent feed verified: all 5 have valid created_at timestamps
+- No data corruption detected
+- Used alphanumeric markers to avoid PII scrubber matching numeric timestamps
+- All 5 steps verified
+
+Feature #102: Atomic transaction on submission
+- Created session and submitted confession via API
+- Queried confessions table directly: confession row exists with correct text and session_hash
+- Queried session_attempts table directly: attempt row exists with matching session_hash
+- Both session_hash values are identical SHA-256(session_id) - consistent and correct
+- Source code verified: db.transaction() wraps both INSERT INTO confessions and INSERT INTO session_attempts
+- Atomicity confirmed at code level and data level
+- All 4 steps verified
+
+=== Observations ===
+- No code changes needed - all implementation was already correct
+- No mock data patterns in src/ (grep verified)
+- Server running on port 3003
+- PII scrubber catches numeric timestamps in test markers - use alphanumeric markers
+
+=== Current Status ===
+105/108 features passing (97.2%)
+
 == Session 42 - 2026-03-05 ==
 Agent: Coding Agent (Features #98, #100)
 Status: Both assigned features PASSING
