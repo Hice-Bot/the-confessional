@@ -1,3 +1,36 @@
+== Session 42 - 2026-03-05 ==
+Agent: Coding Agent (Features #98, #100)
+Status: Both assigned features PASSING
+
+=== Features Completed ===
+
+Feature #98: Timestamps in ISO8601 format
+- Created session and submitted confession
+- GET /confessional/feed/agent returns created_at in ISO8601 format (YYYY-MM-DD HH:MM:SS)
+- All 5 sample timestamps match ISO8601 pattern
+- All timestamps parseable as valid Date objects
+- Health endpoint also returns ISO8601 timestamp
+- All 4 steps verified
+
+Feature #100: created_at populated on confession storage
+- Created session and submitted confession with unique alpha text
+- Queried confessions table directly via better-sqlite3
+- created_at column is NOT NULL (value: '2026-03-05 19:19:13')
+- Matches ISO8601 pattern YYYY-MM-DD HH:MM:SS
+- Parseable as valid Date
+- Approximately 'now': 317ms difference from submission time (UTC parse)
+- Test data cleaned up after verification
+- All 5 steps verified
+
+=== Observations ===
+- No code changes needed - all implementation was already correct
+- No mock data patterns found in src/ (grep verified)
+- PII scrubber catches long numeric strings; used alpha-only markers
+- Server running on port 3003
+
+=== Current Status ===
+103/108 features passing (95.4%)
+
 == Session 39 - 2026-03-05 ==
 Agent: Coding Agent (Feature #93)
 Status: Feature #93 PASSING
