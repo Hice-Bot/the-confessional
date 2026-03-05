@@ -1,3 +1,32 @@
+== Session 16 - 2026-03-05 ==
+Agent: Coding Agent (Features #15, #17)
+Status: Both assigned features PASSING
+
+=== Features Completed ===
+
+Feature #15: 404 for undefined routes
+- GET /confessional/nonexistent → 404 {"error":"Not found"}
+- GET /confessional/admin → 404 {"error":"Not found"}
+- POST /confessional/delete → 404 {"error":"Not found"}
+- GET /api/confessions → 404 {"error":"Not found"}
+- All 4 steps verified
+
+Feature #17: Health endpoint returns database status
+- GET /api/health → 200 application/json
+- Response: {"status":"ok","database":"connected","timestamp":"..."}
+- Response is JSON confirmed via Content-Type header
+- Contains database status field ("database": "connected")
+- Database status indicates healthy/connected
+- All 4 steps verified
+
+=== Observations ===
+- No code changes needed - all features already correctly implemented
+- No mock data patterns in src/ (grep verified)
+- Server running on port 3003
+
+=== Current Status ===
+45/108 features passing (41.7%)
+
 == Session 15 - 2026-03-05 ==
 Agent: Coding Agent (Features #12, #13)
 Status: Both assigned features PASSING
