@@ -1,3 +1,47 @@
+== Session 12 - 2026-03-05 ==
+Agent: Coding Agent (Features #48, #99, #46)
+Status: All 3 assigned features PASSING
+
+=== Features Completed ===
+
+Feature #48: Agent feed returns correct JSON structure
+- GET /confessional/feed/agent with agt_ auth → 200
+- Response has 'confessions' array (length 20)
+- Response has 'count' (number), 'total' (number), 'next_cursor' (string|null)
+- Each confession object has 'text' and 'created_at' fields only
+- No agent_id, session_id, session_hash, or id in confession objects
+- created_at matches ISO8601 pattern
+- All 7 steps verified
+
+Feature #99: Cursor ordering is correct
+- Created 5 confessions with delays between them
+- Human feed returns newest first (NUM_5 before NUM_4 before NUM_1)
+- Pagination with next_cursor returns older, non-overlapping results
+- Agent feed timestamps in descending order confirmed
+- Agent feed compound cursor format: timestamp_uuid (e.g., "2026-03-05 16:59:04_uuid")
+- Human feed opaque cursor is valid base64-encoded (decodes to timestamp|uuid)
+- All 6 steps verified
+
+Feature #46: Human feed pagination works with HTML page
+- 123 confessions available (well above 25 minimum)
+- HTML page loads at /confessional with proper Content-Type
+- Initial feed returns 20 confessions (default limit)
+- IntersectionObserver used with sentinel element for infinite scroll
+- JS tracks nextCursor and uses ?before= with encodeURIComponent
+- Page 2 returns different (older) confessions with no overlap
+- Fade-in animation, staggered delay, empty state handler all present
+- All 6 steps verified
+
+=== Observations ===
+- No code changes needed for any features - all implementation was already correct
+- No mock data patterns found in src/ (grep verified)
+- Server running on port 3003
+- Playwright browser automation not available (missing system deps)
+- Verification done via curl and Node.js test scripts
+
+=== Current Status ===
+35/108 features passing (32.4%)
+
 == Session 11 - 2026-03-05 ==
 Agent: Coding Agent (Features #31, #63, #34)
 Status: All 3 assigned features PASSING
