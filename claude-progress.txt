@@ -1,3 +1,29 @@
+== Session 35 - 2026-03-05 ==
+Agent: Coding Agent (Features #82, #83)
+Status: Both assigned features PASSING
+
+=== Features Completed ===
+
+Feature #82: Session create requires agent_id
+- POST /confessional/sessions with adm_ auth but empty body {} → 400 "agent_id is required"
+- POST /confessional/sessions with adm_ auth and valid agent_id → 200 with session_id and status "open"
+- All 3 steps verified
+
+Feature #83: Admin flag requires confession id
+- POST /confessional/admin/flag with adm_ auth but empty body {} → 400 "Confession id is required"
+- POST /confessional/admin/flag with nonexistent id → 404 "Confession not found"
+- POST /confessional/admin/flag with valid confession id → 200 "Confession flagged"
+- All 4 steps verified
+
+=== Observations ===
+- No code changes needed - all implementation was already correct
+- No mock data patterns found in src/ (grep verified)
+- Server running on port 3003
+- Test data cleaned up after verification
+
+=== Current Status ===
+88/108 features passing (81.5%)
+
 == Session 34 - 2026-03-05 ==
 Agent: Coding Agent (Features #79, #80, #81)
 Status: All 3 assigned features PASSING
