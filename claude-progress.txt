@@ -139,3 +139,46 @@ Feature #29: Full confession submission flow end-to-end
 
 === Current Status ===
 11/108 features passing (10.2%)
+
+== Session 5 - 2026-03-05 ==
+Agent: Coding Agent (Features #8, #30, #32)
+Status: All 3 assigned features PASSING
+
+=== Features Completed ===
+
+Feature #8: Cross-prefix key rejection
+- POST /confessional/submit with adm_ key → 401 (correct)
+- GET /confessional/feed/agent with adm_ key → 401 (correct)
+- POST /confessional/sessions with agt_ key → 401 (correct)
+- POST /confessional/sessions/:id/close with agt_ key → 401 (correct)
+- POST /confessional/admin/flag with agt_ key → 401 (correct)
+- POST /confessional/admin/unflag with agt_ key → 401 (correct)
+- DELETE /confessional/admin/confessions/:id with agt_ key → 401 (correct)
+- All 7 test steps verified - cross-prefix rejection works both ways
+
+Feature #30: Admin flag workflow
+- Created session and submitted confession "FLAG_TEST_UNIQUE_98765_VERIFY"
+- Verified confession appeared in human feed (5 confessions)
+- POST /confessional/admin/flag with confession ID → 200 success
+- GET /confessional/feed → confession no longer appears (4 confessions)
+- GET /confessional/feed/agent → confession no longer appears (4 confessions)
+- GET /confessional/count → count decreased from 5 to 4
+- Queried admin_actions table → flag action logged with admin_key_prefix "adm_test" and note
+- All 8 steps verified; test data cleaned up
+
+Feature #32: Admin hard delete workflow
+- Created session and submitted confession "HARD_DELETE_WORKFLOW"
+- Verified it appeared in feed (6 confessions total)
+- DELETE /confessional/admin/confessions/:id → 200 success
+- GET /confessional/feed → confession gone (5 confessions)
+- Queried confessions table directly → row completely removed (undefined)
+- Queried admin_actions table → delete action logged with confession_id: null and admin_key_prefix "adm_test"
+- All 8 steps verified
+
+=== Observations ===
+- No code changes needed for any features - implementation was already correct
+- No mock data patterns in src/ (grep verified)
+- Server occasionally stops; needed restart during testing
+
+=== Current Status ===
+14/108 features passing (13.0%)
