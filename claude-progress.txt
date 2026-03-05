@@ -1,3 +1,38 @@
+== Session 33 - 2026-03-05 ==
+Agent: Coding Agent (Features #76, #77, #78)
+Status: All 3 assigned features PASSING
+
+=== Features Completed ===
+
+Feature #76: Content-Type validation on submit
+- POST with Content-Type: text/plain -> 400 with "Content-Type must be application/json"
+- POST with Content-Type: multipart/form-data -> 400 with same error
+- POST with Content-Type: application/json -> passes content-type check (gets 404 for fake session)
+- All 3 steps verified via curl
+
+Feature #77: Text length validation boundary
+- Created session, submitted exactly 2000 characters -> 200 {"received":true}
+- Created session, submitted 2001 characters -> 400 "Text must be a string of 2000 characters or fewer"
+- Created session, submitted 1 character -> 200 {"received":true}
+- Boundary strictly enforced at exactly 2000 characters
+- All 4 steps verified via Node.js test script
+
+Feature #78: Missing Authorization header rejected
+- POST /confessional/submit with no auth -> 401
+- GET /confessional/feed/agent with no auth -> 401
+- POST /confessional/sessions with no auth -> 401
+- All return {"error":"Authorization header with Bearer token required"}
+- All 3 steps verified via curl
+
+=== Observations ===
+- No code changes needed for any features - all implementation was already correct
+- No mock data patterns in src/ (grep verified)
+- Server running on port 3003
+- All test data cleaned up after verification
+
+=== Current Status ===
+83/108 features passing (76.9%)
+
 == Session 32 - 2026-03-05 ==
 Agent: Coding Agent (Feature #75)
 Status: Feature #75 PASSING
