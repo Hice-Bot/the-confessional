@@ -1,0 +1,12 @@
+const crypto = require('crypto');
+const sessionId = '4c93adb1-d464-4e92-9df2-ae2a0a61628f';
+const hash = crypto.createHash('sha256').update(sessionId).digest('hex');
+const db = require('better-sqlite3')('./confessional.db');
+const confession = db.prepare('SELECT * FROM confessions WHERE session_hash = ?').get(hash);
+const attempt = db.prepare('SELECT * FROM session_attempts WHERE session_hash = ?').get(hash);
+console.log('Session hash:', hash);
+console.log('Confession stored:', confession ? 'YES (BUG!)' : 'NO (correct - empty was skipped)');
+console.log('Session attempt recorded:', attempt ? 'YES' : 'NO');
+if (attempt) console.log('Attempt details:', JSON.stringify(attempt));
+if (confession) console.log('Confession details:', JSON.stringify(confession));
+db.close();
