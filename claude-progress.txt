@@ -749,3 +749,33 @@ Feature #28: Flagged confession hidden from agent feed
 
 === Current Status ===
 54/108 features passing (50.0%)
+
+== Session 21 - 2026-03-05 ==
+Agent: Coding Agent (Features #38, #39, #40)
+Status: All 3 assigned features PASSING
+
+=== Features Completed ===
+
+Feature #38: Submit without auth returns 401
+- POST /confessional/submit with valid body but no Authorization header → 401
+- Response body: {"error":"Authorization header with Bearer token required"}
+- All 3 steps verified
+
+Feature #39: Submit without X-Session-ID returns 400
+- POST /confessional/submit with agt_ auth and valid body but no X-Session-ID → 400
+- Response body: {"error":"X-Session-ID header is required"}
+- All 3 steps verified
+
+Feature #40: Submit with nonexistent session returns 404
+- POST /confessional/submit with agt_ auth, X-Session-ID: nonexistent-uuid, valid body → 404
+- Response body: {"error":"Session not found"}
+- All 3 steps verified
+
+=== Observations ===
+- No code changes needed for any features - all implementation was already correct
+- No mock data patterns found in src/ (grep verified)
+- Server running on port 3003
+- All error handling endpoints return correct status codes and descriptive error messages
+
+=== Current Status ===
+59/108 features passing (54.6%)
