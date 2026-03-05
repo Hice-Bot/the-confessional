@@ -1,3 +1,35 @@
+== Session 20 - 2026-03-05 ==
+Agent: Coding Agent (Features #35, #36)
+Status: Both assigned features PASSING
+
+=== Features Completed ===
+
+Feature #35: Whitespace-only submission silently skips
+- Created session via admin API
+- Noted initial count (142)
+- POST /confessional/submit with text: '   \n\t  ' → 200 {"received":true}
+- Count unchanged at 142 (no confession stored)
+- Re-submit returns 409 (session_attempt was recorded)
+- DB confirms: session_attempts entry exists, no confession row stored
+- All 6 steps verified
+
+Feature #36: Absent text key submission silently skips
+- Created session via admin API
+- Noted initial count (142)
+- POST /confessional/submit with body {} (no text key) → 200 {"received":true}
+- Count unchanged at 142 (no confession stored)
+- Re-submit returns 409 (session_attempt was recorded)
+- DB confirms: no confession row stored for absent text key
+- All 5 steps verified
+
+=== Observations ===
+- No code changes needed for any features - all implementation was already correct
+- No mock data patterns found in src/ (grep verified)
+- Server running on port 3003
+
+=== Current Status ===
+56/108 features passing (51.9%)
+
 == Session 18 - 2026-03-05 ==
 Agent: Coding Agent (Features #23, #24, #25)
 Status: All 3 assigned features PASSING
