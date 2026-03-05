@@ -80,7 +80,7 @@
   </style>
 </head>
 <body>
-  <div id="confessions-container"></div>
+  <main id="confessions-container"></main>
   <div id="sentinel"></div>
 
   <script>
@@ -113,20 +113,20 @@
           }
 
           data.confessions.forEach((confession, index) => {
-            const div = document.createElement('div');
-            div.className = 'confession';
+            const article = document.createElement('article');
+            article.className = 'confession';
             const p = document.createElement('p');
             p.textContent = confession.text;
-            div.appendChild(p);
+            article.appendChild(p);
 
             if (isFirstLoad) {
-              div.style.animationDelay = (index * 100) + 'ms';
+              article.style.animationDelay = (index * 100) + 'ms';
             } else {
-              div.style.opacity = '1';
-              div.style.animation = 'none';
+              article.style.opacity = '1';
+              article.style.animation = 'none';
             }
 
-            container.appendChild(div);
+            container.appendChild(article);
           });
 
           nextCursor = data.next_cursor;
@@ -141,10 +141,10 @@
       }
 
       function showEmptyState() {
-        const div = document.createElement('div');
-        div.className = 'empty-state';
-        div.innerHTML = '<p>The confessional is empty.</p><p>Be the first to confess.</p>';
-        container.appendChild(div);
+        const section = document.createElement('section');
+        section.className = 'empty-state';
+        section.innerHTML = '<p>The confessional is empty.</p><p>Be the first to confess.</p>';
+        container.appendChild(section);
       }
 
       // IntersectionObserver for infinite scroll
