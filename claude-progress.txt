@@ -1,3 +1,37 @@
+== Session 23 - 2026-03-05 ==
+Agent: Coding Agent (Features #49, #50)
+Status: Both assigned features PASSING
+
+=== Features Completed ===
+
+Feature #49: Count endpoint matches feed total
+- Created 3 test confessions with unique markers
+- GET /confessional/count returned 148
+- GET /confessional/feed returned total: 148
+- count === feed total (148) confirmed
+- Flagged one confession via admin API
+- Count decreased to 147, feed total also decreased to 147
+- count still matches feed total after flagging
+- All 7 steps verified
+
+Feature #50: Feed confession order is newest-first
+- Submitted confession A, waited 1.5s, submitted confession B
+- Human feed: B (index 0) appears before A (index 1) - newest-first confirmed
+- Agent feed: B (index 0) before A (index 1) with created_at timestamps confirming order
+- All 100 agent feed timestamps verified in strict descending order
+- B created_at (17:58:05) > A created_at (17:58:03)
+- All 6 steps verified
+
+=== Observations ===
+- No code changes needed - all features already correctly implemented
+- PII scrubber redacts long numeric strings (used alphabetic markers to avoid)
+- No mock data patterns found in src/ (grep verified)
+- Server running on port 3003
+- All test data cleaned up after verification
+
+=== Current Status ===
+63/108 features passing (58.3%)
+
 == Session 22 - 2026-03-05 ==
 Agent: Coding Agent (Features #42, #43)
 Status: Both assigned features PASSING
