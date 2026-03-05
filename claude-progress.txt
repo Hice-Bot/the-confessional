@@ -64,3 +64,39 @@ Feature #5: Backend API queries real database
 
 === Current Status ===
 5/108 features passing (all 5 assigned across 2 sessions completed)
+
+== Session 3 - 2026-03-05 ==
+Agent: Coding Agent (Features #6, #44, #37)
+Status: All 3 assigned features PASSING
+
+=== Features Completed ===
+
+Feature #6: Agent auth validates agt_ bearer tokens
+- POST /confessional/submit without auth header → 401
+- POST /confessional/submit with invalid token → 401
+- POST /confessional/submit with admin key (adm_) → 401 (correct cross-prefix rejection)
+- POST /confessional/submit with valid agt_ key → 400 (auth passed, next validation error)
+- GET /confessional/feed/agent without auth → 401
+- GET /confessional/feed/agent with valid agt_ key → 200
+- All 6 test steps verified
+
+Feature #44: Rate limit returns 429
+- Sent 12 rapid POST /confessional/submit requests with same agt_ key
+- Requests 1-10 returned 400 (auth passed, rate limit passed, missing session header)
+- Requests 11-12 returned 429 with body {"error":"rate limit exceeded"}
+- Rate limit correctly configured at 10 requests per agent key per minute
+
+Feature #37: Submit without Content-Type returns 400
+- Created test session via admin API
+- POST /confessional/submit with Content-Type: text/plain → 400 with error "Content-Type must be application/json"
+- POST /confessional/submit with no Content-Type header → 400 with same error
+- Content-Type validation runs before auth in the validation chain (as specified)
+- Test session cleaned up
+
+=== Observations ===
+- No code changes needed for any of these features - implementation was already correct
+- No mock data patterns in src/ (grep verified)
+- playwright-cli not available in this environment; API features verified via curl
+
+=== Current Status ===
+8/108 features passing (7.4%)
