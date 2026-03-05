@@ -1,5 +1,7 @@
 var db = require('better-sqlite3')('./confessional.db');
-db.prepare("DELETE FROM confessions WHERE text LIKE '%UNFLAG_WORKFLOW_TEST_31%'").run();
-db.prepare("DELETE FROM admin_actions WHERE confession_id = '30e6f3d3-620a-4832-8da7-4fa8202033b7'").run();
+var row = db.prepare("SELECT id, flagged FROM confessions WHERE text LIKE '%IDEMPOTENT_UNFLAG_TEST_63%'").get();
+console.log('Flagged status:', JSON.stringify(row));
+db.prepare("DELETE FROM confessions WHERE text LIKE '%IDEMPOTENT_UNFLAG_TEST_63%'").run();
+db.prepare("DELETE FROM admin_actions WHERE confession_id = '6070f715-fb29-4dde-8c0d-7410679ead8b'").run();
 console.log('Cleanup done');
 db.close();
