@@ -1,0 +1,13 @@
+node_modules/
+.env
+confessional.db
+confessional.db-wal
+confessional.db-shm
+*.db-journal
+.autoforge/
+.claude/
+.playwright/
+.playwright-cli/
+features.db
+features.db-wal
+features.db-shm

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Confessional</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      background: #000000;
+      color: #f0f0f0;
+      font-family: 'IBM Plex Mono', 'Courier Prime', 'Courier New', monospace;
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 3em 1.5em;
+    }
+
+    #confessions-container {
+      max-width: 65ch;
+      width: 100%;
+    }
+
+    .confession {
+      margin-bottom: 2.5em;
+      opacity: 0;
+      animation: fadeIn 200ms ease-in forwards;
+    }
+
+    .confession p {
+      font-size: 16px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding-top: 30vh;
+      opacity: 0;
+      animation: fadeIn 200ms ease-in forwards;
+    }
+
+    .empty-state p {
+      margin-bottom: 1em;
+    }
+
+    #sentinel {
+      height: 1px;
+    }
+
+    .loading #sentinel {
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+  </style>
+</head>
+<body>
+  <div id="confessions-container"></div>
+  <div id="sentinel"></div>
+
+  <script>
+    (function() {
+      const container = document.getElementById('confessions-container');
+      const sentinel = document.getElementById('sentinel');
+      let nextCursor = null;
+      let isLoading = false;
+      let isFirstLoad = true;
+      let hasMore = true;
+
+      async function loadConfessions() {
+        if (isLoading || !hasMore) return;
+        isLoading = true;
+        document.body.classList.add('loading');
+
+        try {
+          let url = '/confessional/feed?limit=20';
+          if (nextCursor) {
+            url += '&before=' + encodeURIComponent(nextCursor);
+          }
+
+          const res = await fetch(url);
+          const data = await res.json();
+
+          if (data.confessions.length === 0 && container.children.length === 0) {
+            showEmptyState();
+            hasMore = false;
+            return;
+          }
+
+          data.confessions.forEach((confession, index) => {
+            const div = document.createElement('div');
+            div.className = 'confession';
+            const p = document.createElement('p');
+            p.textContent = confession.text;
+            div.appendChild(p);
+
+            if (isFirstLoad) {
+              div.style.animationDelay = (index * 100) + 'ms';
+            } else {
+              div.style.opacity = '1';
+              div.style.animation = 'none';
+            }
+
+            container.appendChild(div);
+          });
+
+          nextCursor = data.next_cursor;
+          hasMore = data.next_cursor !== null;
+          isFirstLoad = false;
+        } catch (err) {
+          console.error('Failed to load confessions:', err);
+        } finally {
+          isLoading = false;
+          document.body.classList.remove('loading');
+        }
+      }
+
+      function showEmptyState() {
+        const div = document.createElement('div');
+        div.className = 'empty-state';
+        div.innerHTML = '<p>The confessional is empty.</p><p>Be the first to confess.</p>';
+        container.appendChild(div);
+      }
+
+      // IntersectionObserver for infinite scroll
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          loadConfessions();
+        }
+      }, { rootMargin: '200px' });
+
+      observer.observe(sentinel);
+
+      // Initial load
+      loadConfessions();
+    })();
+  </script>
+</body>
+</html>
