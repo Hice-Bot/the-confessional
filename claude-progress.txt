@@ -941,3 +941,24 @@ Feature #40: Submit with nonexistent session returns 404
 
 === Current Status ===
 59/108 features passing (54.6%)
+
+== Session 27 - 2026-03-05 ==
+Agent: Coding Agent (Feature #59)
+Status: Feature #59 PASSING
+
+=== Features Completed ===
+
+Feature #59: Root path behavior
+- GET / was returning 404 (undefined route)
+- Added root path handler in server.js: app.get('/', ...) → 302 redirect to /confessional
+- GET / → 302 Found, Location: /confessional (valid redirect response)
+- Does NOT return 500 error (returns 302)
+- Server handles root path gracefully (clean redirect, following it gives 200 at /confessional)
+- No mock data patterns in src/ (grep verified)
+- All 3 steps verified
+
+=== Changes Made ===
+- src/server.js: Added root path GET handler that redirects to /confessional with 302
+
+=== Current Status ===
+72/108 features passing (66.7%)
