@@ -1,3 +1,41 @@
+== Session 11 - 2026-03-05 ==
+Agent: Coding Agent (Features #31, #63, #34)
+Status: All 3 assigned features PASSING
+
+=== Features Completed ===
+
+Feature #31: Admin unflag workflow
+- Created session, submitted confession, flagged it
+- GET /confessional/feed → confirmed hidden (count 116 → 115)
+- POST /confessional/admin/unflag → 200 success
+- GET /confessional/feed → confession reappeared (count back to 116)
+- admin_actions table → both flag and unflag actions logged with correct admin_key_prefix
+- All 7 steps verified
+
+Feature #63: Re-unflag already-visible confession is idempotent
+- Created and submitted confession (unflagged by default, flagged=0)
+- POST /confessional/admin/unflag on unflagged confession → 200 success (no error)
+- Confession still visible in feed after unflag
+- All 3 steps verified
+
+Feature #34: Empty submission silently skips storage
+- Created session, noted initial count (115)
+- POST /confessional/submit with empty text "" → 200 {"received":true}
+- Count unchanged at 115 (no confession stored)
+- No new confession in feed
+- session_attempt recorded (prevents re-submission) → second submit returns 409
+- Also verified with whitespace-only text → same behavior (200, no storage)
+- All 6 steps verified
+
+=== Observations ===
+- No code changes needed for any features - all implementation was already correct
+- No mock data patterns in src/ (grep verified)
+- Server running on port 3003
+- All test data cleaned up after verification
+
+=== Current Status ===
+32/108 features passing (29.6%)
+
 == Session 10 - 2026-03-05 ==
 Agent: Coding Agent (Features #16, #104, #14)
 Status: All 3 assigned features PASSING
