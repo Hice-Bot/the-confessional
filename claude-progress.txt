@@ -1,3 +1,41 @@
+== Session 34 - 2026-03-05 ==
+Agent: Coding Agent (Features #79, #80, #81)
+Status: All 3 assigned features PASSING
+
+=== Features Completed ===
+
+Feature #79: Missing X-Session-ID header rejected
+- POST /confessional/submit with agt_ auth, Content-Type, body, but NO X-Session-ID → 400
+- Error: "X-Session-ID header is required"
+- All 3 steps verified
+
+Feature #80: Empty body submission handled
+- Created session, submitted with empty/no body → 200 {"received":true}
+- GET /confessional/count → count unchanged (159 before and after)
+- Treated as absent text key, no confession stored
+- All 4 steps verified
+
+Feature #81: Invalid JSON body returns 400
+- POST with body 'not json' → was returning 500 (JSON parse error unhandled)
+- Added JSON parse error handler in server.js error middleware (entity.parse.failed → 400)
+- After fix: returns 400 with "Malformed JSON in request body"
+- Verified fix persists across server restart
+- All 3 steps verified
+
+=== Changes Made ===
+- src/server.js: Added JSON parse error handler in Express error middleware
+  - Checks for err.type === 'entity.parse.failed' and returns 400 with descriptive message
+  - Other errors still fall through to 500 handler
+
+=== Observations ===
+- No mock data patterns in src/ (grep verified)
+- Server running on port 3003
+- Features #79 and #80 required no code changes (already correct)
+- Feature #81 required a code fix to error handling middleware
+
+=== Current Status ===
+86/108 features passing (79.6%)
+
 == Session 33 - 2026-03-05 ==
 Agent: Coding Agent (Features #76, #77, #78)
 Status: All 3 assigned features PASSING
