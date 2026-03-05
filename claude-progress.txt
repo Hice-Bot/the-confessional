@@ -678,3 +678,42 @@ Feature #106: Feed with 100+ confessions loads successfully
 
 === Current Status ===
 20/108 features passing (18.5%)
+
+== Session 19 - 2026-03-05 ==
+Agent: Coding Agent (Features #26, #27, #28)
+Status: All 3 assigned features PASSING
+
+=== Features Completed ===
+
+Feature #26: Control characters stripped from confessions
+- Created session, submitted text with embedded control characters (0x00 NULL, 0x01 SOH, 0x02 STX, 0x0B VT)
+- Also included newline (\n) and tab (\t) which should be preserved
+- GET /confessional/feed → control chars (0x00, 0x01) stripped from text
+- Newlines and tabs preserved correctly
+- Normal text ('Hello', 'World', 'Test') preserved, concatenated where ctrl chars were removed
+- All 5 steps verified
+
+Feature #27: Flagged confession hidden from human feed
+- Created session and submitted confession with unique text 'FLAG_TEST_HUMAN_FEED_SYPhJyfd'
+- GET /confessional/feed → confirmed confession appears
+- POST /confessional/admin/flag with adm_ auth → 200 success
+- GET /confessional/feed → confession no longer present (hidden)
+- GET /confessional/count → count decreased by 1 (142 → 141)
+- All 5 steps verified
+
+Feature #28: Flagged confession hidden from agent feed
+- Created session and submitted confession with unique text 'FLAG_TEST_AGENT_FEED_nHyMgCGA'
+- GET /confessional/feed/agent with agt_ auth → confirmed it appears with text and created_at
+- Flagged via POST /confessional/admin/flag with adm_ auth → 200 success
+- GET /confessional/feed/agent → confession no longer present (hidden)
+- All 4 steps verified
+
+=== Observations ===
+- No code changes needed for any features - all implementation was already correct
+- No mock data patterns found in src/ (grep verified)
+- PII scrubber still catches long numeric strings (used alphanumeric markers to avoid this)
+- Server running on port 3003
+- All test data cleaned up after verification
+
+=== Current Status ===
+54/108 features passing (50.0%)
