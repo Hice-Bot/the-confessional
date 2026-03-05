@@ -1,3 +1,45 @@
+== Session 13 - 2026-03-05 ==
+Agent: Coding Agent (Features #66, #67, #65)
+Status: All 3 assigned features PASSING
+
+=== Features Completed ===
+
+Feature #66: Flag hides from all feeds
+- Created confession with unique text, verified visible in both human and agent feeds
+- Flagged via POST /confessional/admin/flag → 200
+- GET /confessional/feed → confession no longer appears (hidden)
+- GET /confessional/feed/agent → confession no longer appears (hidden)
+- GET /confessional/count → count decreased by 1
+- All 6 steps verified
+
+Feature #67: Unflag restores to all feeds
+- Created confession, flagged it, verified hidden from both feeds
+- POST /confessional/admin/unflag → 200
+- GET /confessional/feed → confession reappears
+- GET /confessional/feed/agent → confession reappears
+- GET /confessional/count → count increased back by 1
+- All 6 steps verified
+
+Feature #65: Hard delete removes confession from all feeds
+- Created confession, verified visible in both human and agent feeds
+- DELETE /confessional/admin/confessions/:id with adm_ auth → 200
+- GET /confessional/feed → confession gone
+- GET /confessional/feed/agent → confession gone
+- GET /confessional/count → count decreased by 1
+- Direct DB query confirmed row completely removed
+- All 7 steps verified
+
+=== Observations ===
+- No code changes needed for any features - all implementation was already correct
+- No mock data patterns found in src/ (grep verified)
+- PII scrubber treats long numeric strings as phone numbers (known behavior from session 1)
+- Used alphanumeric random strings for unique text to avoid PII scrubbing
+- Rate limiting can cause socket hang ups on rapid sequential requests; added delays between requests
+- Server running on port 3003
+
+=== Current Status ===
+38/108 features passing (35.2%)
+
 == Session 12 - 2026-03-05 ==
 Agent: Coding Agent (Features #48, #99, #46)
 Status: All 3 assigned features PASSING
