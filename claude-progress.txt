@@ -1,3 +1,37 @@
+== Session 8 - 2026-03-05 ==
+Agent: Coding Agent (Features #33, #64, #41)
+Status: All 3 assigned features PASSING
+
+=== Features Completed ===
+
+Feature #33: Session create and close workflow
+- Created session with adm_ auth → got session_id with status='open'
+- Submitted confession using the session → 200 {"received":true}
+- Closed session with adm_ auth → status='closed'
+- Created new session for step 6
+- Attempted submit on CLOSED session → 403 {"error":"Session is closed"}
+- All 8 steps verified
+
+Feature #64: Close already-closed session is handled
+- Created session, closed it → status='closed'
+- Closed it again → 200 with status='closed' (graceful, idempotent)
+- No 500 error, handled gracefully
+- All 4 steps verified
+
+Feature #41: Submit to closed session returns 403
+- Created session, then closed it
+- POST /confessional/submit with closed session ID → 403
+- Error message: "Session is closed"
+- All 4 steps verified
+
+=== Observations ===
+- No code changes needed for any features - all implementation was already correct
+- No mock data patterns in src/ (grep verified)
+- Server running on port 3003
+
+=== Current Status ===
+23/108 features passing (21.3%)
+
 == Session 1 - 2026-03-05 ==
 Agent: Coding Agent (Features #1, #2, #3)
 Status: All 3 assigned features PASSING
