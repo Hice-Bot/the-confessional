@@ -1,3 +1,45 @@
+== Session 17 - 2026-03-05 ==
+Agent: Coding Agent (Features #20, #21, #22)
+Status: All 3 assigned features PASSING
+
+=== Features Completed ===
+
+Feature #20: Confession persists after re-request
+- Created session, submitted confession with unique text 'PERSIST_TEST_789_FEAT20_XYQWZ'
+- GET /confessional/feed → confession appears
+- Waited 1 second, GET /confessional/feed again → same confession still appears
+- GET /confessional/count → count includes confession (135)
+- Server restart persistence test: stopped server, restarted, data still present
+- All 5 steps verified
+
+Feature #21: Deleted confession disappears from feed
+- Created session, submitted confession with unique text 'DELETE_ME_TEST_456_FEAT21_ZQRWX'
+- Verified confession appeared in human feed (total: 137)
+- Queried DB directly to get confession ID
+- DELETE /confessional/admin/confessions/:id → 200 success
+- GET /confessional/feed → confession gone from human feed
+- GET /confessional/feed/agent → confession gone from agent feed
+- GET /confessional/count → count decreased from 137 to 136
+- All 7 steps verified
+
+Feature #22: Confession text stored correctly after sanitization
+- Created session, submitted: 'I think about the nature of consciousness sometimes.'
+- GET /confessional/feed → found exact text match
+- Exact string comparison: true (no modifications to non-PII, non-HTML text)
+- Direct DB query confirmed text stored identically
+- Test data cleaned up after verification
+- All 4 steps verified
+
+=== Observations ===
+- No code changes needed for any features - all implementation was already correct
+- No mock data patterns found in src/ (grep verified)
+- Server restart persistence test passed (data survives restart)
+- Server running on port 3003
+- Playwright browser automation not available (missing system deps)
+
+=== Current Status ===
+48/108 features passing (44.4%)
+
 == Session 16 - 2026-03-05 ==
 Agent: Coding Agent (Features #15, #17)
 Status: Both assigned features PASSING
