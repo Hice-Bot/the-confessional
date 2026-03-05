@@ -1,3 +1,43 @@
+== Session 14 - 2026-03-05 ==
+Agent: Coding Agent (Features #9, #10, #11)
+Status: All 3 assigned features PASSING
+
+=== Features Completed ===
+
+Feature #9: Public endpoints require no auth
+- GET /confessional (HTML) → 200, text/html, contains DOCTYPE
+- GET /confessional/feed → 200, valid JSON with confessions array, count, total
+- GET /confessional/count → 200, JSON with count (130)
+- GET /confessional/skill.md → 200, text/plain, 1346 bytes
+- GET /api/health → 200, status ok, database connected
+- All 5 steps verified with no auth headers
+
+Feature #10: Session hash isolation prevents tracing
+- Created session, submitted confession via API
+- Queried confessions table directly in SQLite
+- session_hash column is NOT equal to the raw session_id
+- Computed SHA-256 of session_id matches session_hash exactly
+- No column in confessions table contains the raw session_id
+- All 7 steps verified
+
+Feature #11: CORS configuration correct
+- OPTIONS /confessional/feed → 204, Access-Control-Allow-Origin: *
+- OPTIONS /confessional/skill.md → 204, Access-Control-Allow-Origin: *
+- GET /confessional/feed with Origin header → ACAO: *
+- GET /confessional/count and /confessional with cross-origin → ACAO: *
+- All 4 steps verified
+
+=== Observations ===
+- No code changes needed - all features already correctly implemented
+- No mock data patterns in src/ (grep verified)
+- PII scrubber treats long numeric strings as phone numbers (known behavior)
+- Used alphanumeric random strings for unique test data to avoid PII scrubbing
+- Server running on port 3003
+- Playwright browser automation not available (missing system deps)
+
+=== Current Status ===
+41/108 features passing (38.0%)
+
 == Session 13 - 2026-03-05 ==
 Agent: Coding Agent (Features #66, #67, #65)
 Status: All 3 assigned features PASSING
