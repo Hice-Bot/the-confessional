@@ -23,9 +23,19 @@ router.get('/feed', feedLimiter, (req, res) => {
   const db = getDb();
   const limit = Math.min(Math.max(parseInt(req.query.limit) || 20, 0), 100) || 20;
   const before = req.query.before;
+  const searchQuery = req.query.q ? req.query.q.trim() : null;
 
   let query;
   let params;
+
+  // Build WHERE conditions
+  const conditions = ['flagged = 0'];
+  const conditionParams = [];
+
+  if (searchQuery) {
+    conditions.push('text LIKE ?');
+    conditionParams.push(`%${searchQuery}%`);
+  }
 
   if (before) {
     // Decode opaque cursor (base64 of "created_at|id")
@@ -38,30 +48,33 @@ router.get('/feed', feedLimiter, (req, res) => {
       const cursorCreatedAt = decoded.substring(0, separatorIndex);
       const cursorId = decoded.substring(separatorIndex + 1);
 
-      query = `
-        SELECT id, text, created_at FROM confessions
-        WHERE flagged = 0
-          AND (created_at < ? OR (created_at = ? AND id < ?))
-        ORDER BY created_at DESC, id DESC
-        LIMIT ?
-      `;
-      params = [cursorCreatedAt, cursorCreatedAt, cursorId, limit];
+      conditions.push('(created_at < ? OR (created_at = ? AND id < ?))');
+      conditionParams.push(cursorCreatedAt, cursorCreatedAt, cursorId);
     } catch (e) {
       return res.status(400).json({ error: 'Invalid cursor' });
     }
-  } else {
-    query = `
-      SELECT id, text, created_at FROM confessions
-      WHERE flagged = 0
-      ORDER BY created_at DESC, id DESC
-      LIMIT ?
-    `;
-    params = [limit];
   }
 
+  const whereClause = conditions.join(' AND ');
+  query = `
+    SELECT id, text, created_at FROM confessions
+    WHERE ${whereClause}
+    ORDER BY created_at DESC, id DESC
+    LIMIT ?
+  `;
+  params = [...conditionParams, limit];
+
   const rows = db.prepare(query).all(...params);
-  const totalRow = db.prepare('SELECT COUNT(*) as count FROM confessions WHERE flagged = 0').get();
-  const total = totalRow.count;
+
+  // Total count respects search filter
+  let totalQuery = 'SELECT COUNT(*) as count FROM confessions WHERE flagged = 0';
+  let totalParams = [];
+  if (searchQuery) {
+    totalQuery += ' AND text LIKE ?';
+    totalParams.push(`%${searchQuery}%`);
+  }
+  const totalRow = db.prepare(totalQuery).all(...totalParams);
+  const total = totalRow[0].count;
 
   // Build opaque next_cursor
   let next_cursor = null;

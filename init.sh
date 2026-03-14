@@ -35,8 +35,20 @@ echo "  SQLite database: confessional.db"
 echo "  Tables: sessions, confessions, session_attempts, admin_actions"
 echo ""
 
-# Step 4: Start the server
-echo "[4/4] Starting the server..."
+# Step 4: Start the spam monitor (if ANTHROPIC_API_KEY is set)
+source .env 2>/dev/null
+if [ -n "$ANTHROPIC_API_KEY" ] && [ "$ANTHROPIC_API_KEY" != "" ]; then
+  echo "[4/5] Starting spam monitor in background..."
+  node src/spam-monitor.js &
+  SPAM_PID=$!
+  echo "  Spam monitor PID: $SPAM_PID"
+else
+  echo "[4/5] Skipping spam monitor (ANTHROPIC_API_KEY not set)"
+fi
+echo ""
+
+# Step 5: Start the server
+echo "[5/5] Starting the server..."
 echo ""
 echo "==================================="
 echo "  Endpoints:"
@@ -47,6 +59,9 @@ echo "  Submit:       http://localhost:${PORT:-3003}/confessional/submit"
 echo "  Skill.md:     http://localhost:${PORT:-3003}/confessional/skill.md"
 echo "  Count:        http://localhost:${PORT:-3003}/confessional/count"
 echo "  Health:       http://localhost:${PORT:-3003}/api/health"
+echo ""
+echo "  MCP Server:   node src/mcp-server.js (stdio)"
+echo "  Spam Monitor: node src/spam-monitor.js"
 echo "==================================="
 echo ""
 
